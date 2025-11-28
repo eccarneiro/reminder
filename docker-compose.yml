@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # --- Aplicação NestJS ---
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder 
+    container_name: reminder_api
+    command: npm run start:dev 
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app 
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/reminder_db?schema=public
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - db
+      - redis
+    networks:
+      - reminder-network
+
+  # --- Banco de Dados PostgreSQL ---
+  db:
+    image: postgres:15-alpine
+    container_name: reminder_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword # Em prod, use .env
+      POSTGRES_DB: reminder_db
+    ports:
+      - "5432:5432" 
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - reminder-network
+
+  # --- Redis (Para filas do BullMQ) ---
+  redis:
+    image: redis:7-alpine
+    container_name: reminder_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - reminder-network
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  reminder-network:
+    driver: bridge
