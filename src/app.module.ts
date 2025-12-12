@@ -1,10 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { ChannelsModule } from './modules/channels/channels.module';
+import { EventsModule } from './modules/events/events.module';
+import { DevicesModule } from './modules/devices/devices.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { ConfigModule } from '@nestjs/config';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot(),
+    ChannelsModule, 
+    EventsModule, 
+    DevicesModule, 
+    SubscriptionsModule, 
+    UsersModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
