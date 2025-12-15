@@ -5,6 +5,8 @@ import { DevicesModule } from './modules/devices/devices.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
+import { auth } from "./auth"; 
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import { UsersModule } from './modules/users/users.module';
     DevicesModule, 
     SubscriptionsModule, 
     UsersModule],
-  controllers: [],
+  controllers: [AuthController],
   providers: [],
 })
 export class AppModule {}
